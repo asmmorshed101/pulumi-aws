@@ -1,41 +1,41 @@
-### Launch EC2 Instances in Public and Private Subnets using Pulumi 
+# Launch EC2 Instances in Public and Private Subnets using Pulumi 
 
 
 <img src="pulumi-vpc-ec2.drawio.svg" alt="pulumi-vpc-ec2" width="600" />
 
-First of all, we need to configure AWS CLI with the necessary credentials. 
+### First of all, we need to configure AWS CLI with the necessary credentials. 
 
 ```bash
 aws configure
 ```
-Now create a directory and navigate into it:
+### Now create a directory and navigate into it:
 
 ```bash
 mkdir pulumi-vpc-aws
 cd pulumi-vpc-aws
 ```
-Now update and install Python
+### Now update and install Python
 ```bash
 sudo apt update
 sudo apt install python3.10-venv
 ```
-# Create a New Pulumi Project
+### Create a New Pulumi Project
 
 ```bash
 pulumi new aws-python
 ```
-# Create a key pair
+### Create a key pair
 
 ```bash
 aws ec2 create-key-pair --key-name MyKeyPair --query 'KeyMaterial' --output text > MyKeyPair.pem
 ```
-# Set File Permission
+### Set File Permission
 ```bash
 chmod 400 MyKeyPair.pem
 ```
 # Now write these code in __main__.py file
 
-# 1. Create a VPC
+### 1. Create a VPC
 
 ```bash
 import pulumi
@@ -51,7 +51,7 @@ vpc = aws.ec2.Vpc("my-vpc",
 
 pulumi.export("vpc_id", vpc.id)
 ```
-# 2. Create  a Public Subnet
+### 2. Create  a Public Subnet
 
 ```bash
 # Create a public subnet
@@ -67,7 +67,7 @@ public_subnet = aws.ec2.Subnet("public-subnet",
 
 pulumi.export("public_subnet_id", public_subnet.id)
 ```
-# 3. Create a private Subnet
+### 3. Create a private Subnet
 ```bash
 # Create a private subnet
 private_subnet = aws.ec2.Subnet("private-subnet",
@@ -81,7 +81,7 @@ private_subnet = aws.ec2.Subnet("private-subnet",
 
 pulumi.export("private_subnet_id", private_subnet.id)
 ```
-# 4. Create an Internet Gateway
+### 4. Create an Internet Gateway
 
 ```bash
 # Create an Internet Gateway
@@ -95,7 +95,7 @@ igw = aws.ec2.InternetGateway("internet-gateway",
 pulumi.export("igw_id", igw.id)
 ```
 
-# 5. Create Public Route Table and Associate with Public Subnet
+### 5. Create Public Route Table and Associate with Public Subnet
 
 ```bash
 # Create a route table
@@ -121,7 +121,7 @@ route_table_association = aws.ec2.RouteTableAssociation("public-route-table-asso
 
 pulumi.export("public_route_table_id", public_route_table.id)
 ```
-# 6. Create a NAT Gateway
+### 6. Create a NAT Gateway
 
 ```bash
 # Allocate an Elastic IP for the NAT Gateway
@@ -139,7 +139,7 @@ nat_gateway = aws.ec2.NatGateway("nat-gateway",
 pulumi.export("nat_gateway_id", nat_gateway.id)
 ```
 
-# 7. Create Private Route Table and Associate With Private Subnet:
+### 7. Create Private Route Table and Associate With Private Subnet:
 
 ```bash
 # Create a route table for the private subnet
@@ -165,7 +165,7 @@ private_route_table_association = aws.ec2.RouteTableAssociation("private-route-t
 
 pulumi.export("private_route_table_id", private_route_table.id)
 ```
-# 8. Create EC2 instance in Public Subnet
+### 8. Create EC2 instance in Public Subnet
 
 ```bash
 # Create a security group for the public instance
@@ -200,7 +200,7 @@ public_instance = aws.ec2.Instance("public-instance",
 pulumi.export("public_instance_id", public_instance.id)
 pulumi.export("public_instance_ip", public_instance.public_ip)
 ```
-# 9. Create EC2 Instance in Private Subnet
+### 9. Create EC2 Instance in Private Subnet
 
 ```bash
 # Create a security group for the private instance
@@ -230,7 +230,7 @@ private_instance = aws.ec2.Instance("private-instance",
 pulumi.export("private_instance_id", private_instance.id)
 ```
 
-## Now Run 
+### Now Run 
 
 ```bash
 pulumi up
